@@ -52,7 +52,8 @@ class RnnEncoder(nn.Module):
 
         if lengths is None:
             lengths = find_lengths(message)
-
+            
+        lengths = lengths.cpu() if lengths.is_cuda else lengths
         packed = nn.utils.rnn.pack_padded_sequence(
             emb, lengths, batch_first=True, enforce_sorted=False)
         _, rnn_hidden = self.cell(packed)
@@ -111,6 +112,7 @@ class RnnEncoderImpatient(nn.Module):
         if lengths is None:
             lengths = find_lengths(message)
 
+        lengths = lengths.cpu() if lengths.is_cuda else lengths
         packed = nn.utils.rnn.pack_padded_sequence(
             emb, lengths, batch_first=True, enforce_sorted=False)
 
