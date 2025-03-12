@@ -16,6 +16,15 @@ from egg.core.reinforce_wrappers import RnnReceiverImpatient
 from egg.core.reinforce_wrappers import SenderImpatientReceiverRnnReinforce
 from egg.core.util import dump_sender_receiver_impatient
 
+class NumpyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.floating):
+            return float(obj)
+        if isinstance(obj, np.integer):
+            return int(obj)
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return super(NumpyEncoder, self).default(obj)
 
 def get_params(params):
     parser = argparse.ArgumentParser()
@@ -226,7 +235,8 @@ def dump(game, n_features, device, gs_mode, epoch):
 
     #print(f'Mean accuracy wrt uniform distribution is {unif_acc}')
     #print(f'Mean accuracy wrt powerlaw distribution is {powerlaw_acc}')
-    print(json.dumps({'powerlaw': powerlaw_acc, 'unif': unif_acc}))
+    # print(json.dumps({'powerlaw': powerlaw_acc, 'unif': unif_acc}))
+    print(json.dumps({'powerlaw': powerlaw_acc, 'unif': unif_acc}, cls=NumpyEncoder))
 
     return acc_vec, messages
 
@@ -261,7 +271,7 @@ def dump_impatient(game, n_features, device, gs_mode,epoch):
     #print(f'Mean accuracy wrt uniform distribution is {unif_acc}')
     #print(f'Mean accuracy wrt powerlaw distribution is {powerlaw_acc}')
     if epoch%25==0:
-        print(json.dumps({'powerlaw': powerlaw_acc, 'unif': unif_acc}))
+        print(json.dumps({'powerlaw': powerlaw_acc, 'unif': unif_acc}, cls=NumpyEncoder))
 
     return acc_vec, messages
 
