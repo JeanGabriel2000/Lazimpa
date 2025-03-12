@@ -276,7 +276,7 @@ def dump_impatient(game, n_features, device, gs_mode,epoch):
     return acc_vec, messages
 
 def main(params):
-    print(torch.cuda.is_available())
+    print("cuda availability: ", torch.cuda.is_available())
     opts = get_params(params)
     print(opts, flush=True)
     device = opts.device
