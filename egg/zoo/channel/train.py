@@ -387,11 +387,24 @@ def main(params):
             acc_vec,messages=dump_impatient(trainer.game, opts.n_features, device, False,epoch)
 
         # ADDITION TO SAVE MESSAGES
-        all_messages=[]
-        for x in messages:
-            x = x.cpu().numpy()
-            all_messages.append(x)
-        all_messages = np.asarray(all_messages)
+        # all_messages=[]
+        # for x in messages:
+        #     x = x.cpu().numpy()
+        #     all_messages.append(x)
+        # all_messages = np.asarray(all_messages)
+        # First, determine the maximum sequence length
+        max_len = max(msg.shape[0] for msg in all_messages)
+        # Pad all sequences to the same length
+        padded_messages = []
+        for msg in all_messages:
+            if msg.shape[0] < max_len:
+                # Pad with zeros or the EOS token (whatever makes sense for your model)
+                padded = np.pad(msg, (0, max_len - msg.shape[0]), 'constant')
+                padded_messages.append(padded)
+            else:
+                padded_messages.append(msg)
+        # Now convert to numpy array
+        all_messages = np.asarray(padded_messages)
 
         if epoch%50==0:
             torch.save(sender.state_dict(), opts.dir_save+"/sender/sender_weights"+str(epoch)+".pth")
