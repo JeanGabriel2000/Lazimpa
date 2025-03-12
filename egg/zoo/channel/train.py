@@ -387,10 +387,10 @@ def main(params):
             acc_vec,messages=dump_impatient(trainer.game, opts.n_features, device, False,epoch)
 
         # ADDITION TO SAVE MESSAGES
-        # all_messages=[]
-        # for x in messages:
-        #     x = x.cpu().numpy()
-        #     all_messages.append(x)
+        all_messages=[]
+        for x in messages:
+            x = x.cpu().numpy()
+            all_messages.append(x)
         # all_messages = np.asarray(all_messages)
         # First, determine the maximum sequence length
         max_len = max(msg.shape[0] for msg in all_messages)
